@@ -1,26 +1,113 @@
 @import "tailwindcss";
 
+/* Attribute-based dark mode so the ThemeToggle can override system preference. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ------------------------------------------------------------------ *
+ * Design tokens
+ * Dark is the default theme (values on :root). Light overrides below.
+ * ------------------------------------------------------------------ */
 :root {
+  --background: #08090c;
+  --surface: #0e1014;
+  --surface-2: #14161c;
+  --border: #23262e;
+  --foreground: #f4f5f7;
+  --muted: #9096a1;
+  --muted-2: #828892;
+  --accent: #7c83ff;
+  --accent-strong: #6366f1;
+  --accent-contrast: #ffffff;
+  --ring: #7c83ff;
+}
+
+[data-theme="light"] {
   --background: #ffffff;
-  --foreground: #171717;
+  --surface: #ffffff;
+  --surface-2: #f6f7f9;
+  --border: #e6e8ec;
+  --foreground: #0b0d12;
+  --muted: #565d6b;
+  --muted-2: #6b7280;
+  --accent: #5b60f0;
+  --accent-strong: #4f46e5;
+  --accent-contrast: #ffffff;
+  --ring: #5b60f0;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-2: var(--muted-2);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-ring: var(--ring);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: dark;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+/* Subtle grid/dot backdrop token reused by hero */
+.bg-grid {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--foreground) 6%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+}
+
+/* ------------------------------------------------------------------ *
+ * Fade-in — the ONLY motion on the site. Applied by <FadeIn/>.
+ * ------------------------------------------------------------------ */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  opacity: 0;
+}
+
+.fade-in.is-visible {
+  animation: fade-in-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .fade-in.is-visible {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
 }

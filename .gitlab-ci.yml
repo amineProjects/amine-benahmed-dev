@@ -1,0 +1,26 @@
+# GitLab Pages deploy — builds the Next.js static export and publishes it.
+# Next 16 requires Node >= 20.9; the node:20 image ships yarn 1.x (matches yarn.lock).
+image: node:20
+
+stages:
+  - deploy
+
+pages:
+  stage: deploy
+  cache:
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - .yarn-cache
+  script:
+    - yarn install --frozen-lockfile --cache-folder .yarn-cache
+    - yarn build # next build with output:"export" → ./out
+    # GitLab Pages serves the `public/` artifact. The source public/ assets are
+    # already copied into out/ by the export, so it's safe to replace it.
+    - rm -rf public && mv out public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
