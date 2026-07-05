@@ -18,7 +18,7 @@ export const site = {
   subtitle:
     "I take products from architecture to CI/CD release — building production software with Rust, React, TypeScript and cloud-sync architecture.",
   email: "amine@dokanionline.com",
-  resumeHref: "/resume.pdf",
+  resumeHref: "/MohammedAmineBenahmedCV.pdf",
   /** metadataBase / canonical origin — update to the real production domain. */
   url: "https://aminebenahmed.dev",
   location: "Algeria · Open to Remote",
